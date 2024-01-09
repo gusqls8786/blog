@@ -39,11 +39,15 @@ button {
   background-image: linear-gradient(#0a3cce 70%, transparent);
 }
 
+/* main */
+
 #main {
   position: relative;
   overflow: hidden;
   background-color: #0c36c4;
 }
+
+/* page1 */
 
 #page1 {
   height: 100vh;
@@ -324,7 +328,6 @@ button {
   position: relative;
 }
 
-/* //page3 */
 
 /* page4 */
 #page4 {
