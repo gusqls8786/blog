@@ -1,32 +1,40 @@
 function loco(){
     gsap.registerPlugin(ScrollTrigger);
     
+    // Using Locomotive Scroll from Locomotive https://github.com/locomotivemtl/locomotive-scroll
     
     const locoScroll = new LocomotiveScroll({
       el: document.querySelector("#main"),
       smooth: true
     });
-
+    // each time Locomotive Scroll updates, tell ScrollTrigger to update too (sync positioning)
+    // Locomotive Scroll이 업데이트될 때마다 스크롤 트리거에 업데이트하라고 말합니다(동기식 위치 지정)
     locoScroll.on("scroll", ScrollTrigger.update);
     
+    // tell ScrollTrigger to use these proxy methods for the ".smooth-scroll" element since Locomotive Scroll is hijacking things
+    //ScrollTrigger에 Locomotive Scroll이  hijacking things하고 있으므로 "smooth-scroll" 요소에 대해 이러한 프록시 방법을 사용하도록 지시합니다
     ScrollTrigger.scrollerProxy("#main", {
       scrollTop(value) {
         return arguments.length ? locoScroll.scrollTo(value, 0, 0) : locoScroll.scroll.instance.scroll.y;
-      },
+      }, // we don't have to define a scrollLeft because we're only scrolling vertically.//scrollLeft 정의할 필요가 없습니다. 왜냐하면 우리는 오직 수직으로 스크롤하기 때문입니다.
       getBoundingClientRect() {
         return {top: 0, left: 0, width: window.innerWidth, height: window.innerHeight};
       },
-    
+      // LocomotiveScroll handles things completely differently on mobile devices - it doesn't even transform the container at all! So to get the correct behavior and avoid jitters, we should pin things with position: fixed on mobile. We sense it by checking to see if there's a transform applied to the container (the LocomotiveScroll-controlled element).
+      // LocomotiveScroll은 모바일 장치에서 완전히 다르게 처리합니다. 심지어 용기를 변형시키지도 않습니다. 따라서 올바른 행동을 취하고 불안감을 피하기 위해서는 위치가 고정된 것을 핀으로 고정해야 합니다. 우리는 용기(기관차 스크롤 제어 요소)에 변형이 적용되는지 확인함으로써 그것을 감지합니다
       pinType: document.querySelector("#main").style.transform ? "transform" : "fixed"
     });
     
     
     
     
-  
+    
+    // each time the window updates, we should refresh ScrollTrigger and then update LocomotiveScroll. 
+    //창이 업데이트될 때마다 스크롤 트리거를 새로 고치고 LocomotiveScroll을 업데이트해야 합니다.
     ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
     
-
+    // after everything is set up, refresh() ScrollTrigger and update LocomotiveScroll because padding may have been added for pinning, etc.
+    //모든 것이 설정된 후, 스크롤 트리거를 새로 고치고() 고정 등을 위해 패딩이 추가되었을 수 있으므로 기관차 스크롤을 업데이트합니다.
     ScrollTrigger.refresh();
     }
     loco()
@@ -36,6 +44,7 @@ function loco(){
   //page2
   let clutter="";
 
+  //.textContent --> 텍스트 콘텐츠을 가져온다
   let page2_h2 = document.querySelector('#page2>h2').textContent.split("");
   page2_h2.forEach((dets)=>{
     clutter += `<span>${dets}</span>`;
@@ -167,15 +176,15 @@ images.push(img);
 console.log(images)
 
 gsap.to(imageSeq, {
-frame: frameCount - 1,
-snap: "frame",
+frame: frameCount - 1,//애니메이션의 마지막 프레임
+snap: "frame", //스크롤 위치에 따라 프레임이 변경
 ease: `none`,
 scrollTrigger: {
   scrub: .5,
   trigger: `#page3`,
   start: `top top`,
   end: `250% top`,
-  scroller: `#main`,
+  scroller: `#main`,// 스크롤을 감지하는 컨테이너 엘리먼트
 },
 onUpdate: render,
 });
@@ -183,6 +192,7 @@ onUpdate: render,
 images[1].onload = render;
 
 function render() {
+//console.log(imageSeq)
 scaleImage(images[imageSeq.frame], context);
 }
 
@@ -220,6 +230,7 @@ canvas()
 // page4
 let clutter2="";
 
+//.textContent --> 텍스트 콘텐츠을 가져온다
 let page4_h2 = document.querySelector('#page4>h2').textContent.split("");
 page4_h2.forEach((dets)=>{
   clutter2 += `<span>${dets}</span>`;
@@ -340,15 +351,15 @@ images.push(img);
 console.log(images)
 
 gsap.to(imageSeq, {
-frame: frameCount - 1,
-snap: "frame", 
+frame: frameCount - 1,//애니메이션의 마지막 프레임
+snap: "frame", //스크롤 위치에 따라 프레임이 변경
 ease: `none`,
 scrollTrigger: {
   scrub: .5,
   trigger: `#page5`,
   start: `top top`,
   end: `250% top`,
-  scroller: `#main`,
+  scroller: `#main`,// 스크롤을 감지하는 컨테이너 엘리먼트
 },
 onUpdate: render,
 });
@@ -356,6 +367,7 @@ onUpdate: render,
 images[1].onload = render;
 
 function render() {
+//console.log(imageSeq)
 scaleImage(images[imageSeq.frame], context);
 }
 
@@ -393,6 +405,7 @@ canvas5()
 //page6
 let clutter3="";
 
+//.textContent --> 텍스트 콘텐츠을 가져온다
 let page6_h2 = document.querySelector('#page6>h2').textContent.split("");
 page6_h2.forEach((dets)=>{
   clutter3 += `<span>${dets}</span>`;
@@ -583,15 +596,15 @@ function canvas7(){
   console.log(images)
   
   gsap.to(imageSeq, {
-  frame: frameCount - 1,
-  snap: "frame",
+  frame: frameCount - 1,//애니메이션의 마지막 프레임
+  snap: "frame", //스크롤 위치에 따라 프레임이 변경
   ease: `none`,
   scrollTrigger: {
     scrub: .5,
     trigger: `#page7`,
     start: `top top`,
     end: `250% top`,
-    scroller: `#main`,
+    scroller: `#main`,// 스크롤을 감지하는 컨테이너 엘리먼트
   },
   onUpdate: render,
   });
@@ -599,6 +612,7 @@ function canvas7(){
   images[1].onload = render;
   
   function render() {
+  //console.log(imageSeq)
   scaleImage(images[imageSeq.frame], context);
   }
   
@@ -651,6 +665,7 @@ function canvas7(){
       scrub:0.5
     },
     scale:1.5,
+    //circle이 커지고 난뒤 할일
     onComplete:()=>{
       gsap.to(".page7-cir",{
         scrollTrigger:{
@@ -843,15 +858,15 @@ function canvas11(){
   console.log(images)
   
   gsap.to(imageSeq, {
-  frame: frameCount - 1,
-  snap: "frame", 
+  frame: frameCount - 1,//애니메이션의 마지막 프레임
+  snap: "frame", //스크롤 위치에 따라 프레임이 변경
   ease: `none`,
   scrollTrigger: {
     scrub: .2,
     trigger: `#page11 .mg-roadmap-right`,
     start: `top top`,
     end: `bottom 80%`,
-    scroller: `#main`,
+    scroller: `#main`,// 스크롤을 감지하는 컨테이너 엘리먼트
   },
   onUpdate: render,
   });
@@ -859,6 +874,7 @@ function canvas11(){
   images[1].onload = render;
   
   function render() {
+  //console.log(imageSeq)
   scaleImage(images[imageSeq.frame], context);
   }
   
@@ -892,6 +908,7 @@ function canvas11(){
   }
   canvas11()
 
+//sticky영역의 left
 let mgi = document.querySelectorAll('.mg-roadmap-item');
 
 mgi.forEach((item)=>{
